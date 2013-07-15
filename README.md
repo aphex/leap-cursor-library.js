@@ -33,7 +33,7 @@ $ git clone git@github.com:aphex/leap-cursor-library.js.git
 $ npm install
 ```
 
-6. Serve the Demo applications and watch for changes to the core files
+6. Serve the examples and watch for changes to the core files
 ```
 $ grunt serve
 ```
@@ -45,9 +45,9 @@ $ grunt serve
 
 At the most basic level the Leap Manager can begin adding interacivity to your site or application with a single line. Simply include the files needed for leapJS then add the leap-manager.min.css. Finally include leap-manager.min.js to the bottom of your body tag. Then simply run
 
-,,,javascript
+```javascript
     LeapManager.init({});
-,,,
+```
 
 
 ### Folder Structure
