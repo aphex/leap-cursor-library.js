@@ -53,6 +53,6 @@ At the most basic level the Leap Manager can begin adding interacivity to your s
 ### Folder Structure
 - **build/css** Developer and Deploy version of the core CSS for the cursor library
 - **build/js** Minified leap-manager.js for use in production environments
-- **examples/** Exmaples for syntax and UI concepts
+- **examples/** Examples for syntax and UI concepts
 - **lib/** Third party assets
 - **src/** Leap Cursor Library source files
