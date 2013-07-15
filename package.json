@@ -1,0 +1,19 @@
+{
+  "name": "leap-cursor-library",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/aphex/leap-cursor-library.js.git"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-sass": "~0.4.1",
+    "grunt-contrib-cssmin": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-watch": "~0.4.4",
+    "grunt-contrib-connect": "~0.3.0"
+  },
+  "readme": "# leap-cursor-library.js",
+  "readmeFilename": "README.md"
+}
