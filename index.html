@@ -2,6 +2,10 @@
 <html>
 <head>
     <title>Leap Cursor Library Examples</title>
+    <link rel="stylesheet" type="text/css" href="build/css/leap-manager.css">
+    
+    <script type="text/javascript" src="lib/js/leap.min.js"></script>
+    <script type="text/javascript" src="build/js/leap-manager.min.js"></script>
     <style type="text/css">
         h2 {
           font: 400 40px/1.5 Helvetica, Verdana, sans-serif;
@@ -36,7 +40,7 @@
           transition: font-size 0.3s ease, background-color 0.3s ease;
         }
 
-        li a:hover {
+        li a:hover, li a.hover {
           font-size: 30px;
           background: #f6f6f6;
         }
@@ -50,10 +54,23 @@
         <li><a href="examples/basic-selector.html">Basic Selector</a></li>
         <li><a href="examples/basic-gesture.html">Basic Gesture</a></li>
         <li><a href="examples/basic-attributes.html">Basic Attributes</a></li>
+        <li><a href="examples/basic-maps.html">Basic Maps</a></li>
+        <li><a href="examples/basic-press.html">Basic Press</a></li>
+        <li><a href="examples/basic-scroll.html">Basic Scroll</a></li>
+        <li><a href="examples/basic-pressscroll.html">Basic PressScroll</a></li>
+        <li><a href="examples/basic-touchscroll.html">Basic TouchScroll</a></li>
         <li><a href="examples/mouse-simulator.html">Mouse Simulator</a></li>
         <li><a href="examples/ui-tiles-multitap.html">UI Tiles - Multitap</a></li>
         <li><a href="examples/ui-tiles-rollover.html">UI Tiles - Rollover</a></li>
         <li><a href="examples/ui-tiles-gesture.html">UI Tiles - Gesture</a></li>
     </ul>
+
+    <script type="text/javascript">
+        LeapManager.init({
+            interactiveSelector:"a",
+            enableMetaGestures: false,
+            maxCursors:1
+        });
+    </script>
 </body>
 </html>

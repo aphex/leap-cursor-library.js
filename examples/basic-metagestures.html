@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leap Cursor Library - Basic MetaGestures</title>
+    <link rel="stylesheet" type="text/css" href="../build/css/leap-manager.css">
+    <script type="text/javascript" src="../build/js/leap-manager.min.js"></script>
+    <script type="text/javascript" src="../lib/js/leap.min.js"></script>
+</head>
+<body>
+    <div class="output"></div>
+    <script type="text/javascript">
+        var output          = document.querySelector("div.output");
+
+        document.body.addEventListener("leap-dual-swipe", function(event){
+            var gesture = event.gesture
+            output.innerHTML += gesture.type + " : " + gesture.direction;
+        })
+
+        LeapManager.init({
+            maxCursors:1,
+            enableMetaGestures:true,
+            enableDefaultMetaGestureActions: false
+        });
+    </script>
+</body>
+</html>
