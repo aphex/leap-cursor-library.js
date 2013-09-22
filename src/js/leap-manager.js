@@ -249,11 +249,15 @@ var LeapManagerUtils = (function() {
 
             return Math.sqrt( xs + ys );
         },
-        getQueryAll: function(id, selector) {
-            if(!LeapManagerUtils.exists(queryCache[id])) {
-                queryCache[id] = document.querySelectorAll(selector);
+        getQueryAll: function(id, selector, useCache) {
+            if(useCache) {
+                if(!LeapManagerUtils.exists(queryCache[id])) {
+                    queryCache[id] = document.querySelectorAll(selector);
+                }
+                return queryCache[id];
+            } else {
+                return document.querySelectorAll(selector);
             }
-            return queryCache[id];
         },
         getQuery: function(id, selector) {
             if(!LeapManagerUtils.exists(queryCache[id])) {
@@ -598,7 +602,7 @@ Cursor.prototype = {
             mouseEvent.initMouseEvent("mouseout", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
             this.element.fireEvent(mouseEvent);
 
-            //if(this.isDown()) this.dispatchUp(element, false);
+            if(this.isDown()) this.dispatchUp(element, false);
             this.onElementOut(this.element);
         }
     },
@@ -657,6 +661,7 @@ var CursorManager = function(config) {
     this.enableHoverTap = config.enableHoverTap === true;
     this.enablePressDown = config.enablePressDown === true;
     this.greedySelector = config.greedySelector || null;
+    this.cacheAllQueries = config.cacheAllQueries || false;
 
     if (!this.cursorContainer) {
         this.cursorContainer = new LeapElement(document.createElement('div'));
@@ -885,7 +890,7 @@ CursorManager.prototype = {
             selector += ", " + this.interactiveSelector;
         }
 
-        var interactiveElements = LeapManagerUtils.getQueryAll("interactiveElements", selector) || [],
+        var interactiveElements = LeapManagerUtils.getQueryAll("interactiveElements", selector, this.cacheAllQueries) || [],
             horizontalPadding, verticalPadding, i, element, bounds, withinXBounds, withinYBounds;
 
         for (i = interactiveElements.length-1; i >= 0; i--) {
@@ -907,7 +912,7 @@ CursorManager.prototype = {
 
                     if(element) {
                         if(element.isTappable() && typeof(this.untappableSelector) === "string" && this.untappableSelector.length >0) {
-                            var untappableElements = LeapManagerUtils.getQueryAll("untappableElements", this.untappableSelector) || [];
+                            var untappableElements = LeapManagerUtils.getQueryAll("untappableElements", this.untappableSelector, this.cacheAllQueries) || [];
                             for (i = 0; i < untappableElements.length; i++) {
                                 if(untappableElements[i] === element.getElement()) {
                                     element.setAttribute("leap-disable-tap", "true");
@@ -1028,6 +1033,7 @@ var LeapManager = (function() {
         enableDefaultMetaGestureActions: true,
         metaGestureMaxDelay: 1200,
         greedySelector: null,
+        cacheAllQueries: false,
         root: null,
         gestureCallback: null,
         gestureScope: null,
@@ -1102,7 +1108,8 @@ var LeapManager = (function() {
                 enableHoverTap: config.enableHoverTap,
                 enablePressDown: config.enablePressDown,
                 pressThreshold: config.pressThreshold,
-                greedySelector: config.greedySelector
+                greedySelector: config.greedySelector,
+                cacheAllQueries: config.cacheAllQueries
             });
             if (this.simulateWithMouse) MouseSimulator.init(this.cursorManager, config.mouseCursorConfig || {});
             //Active Tab/Window Checking

@@ -180,22 +180,19 @@
         var rightButton = document.querySelector(".button.right");
 
         var updateButtons = function() {
-            leftButton.className = leftButton.className.replace(" inactive", "");
-            
-            
-            if(currentSection  === 0) {
+            if (currentSection  === 0) {
                 rightButton.className += " inactive";
                 rightButton.className = rightButton.className.replace(" leap-interactive", "");
-            }else {
+            } else {
                 rightButton.className = rightButton.className.replace(" inactive", "");
                 if(rightButton.className.indexOf("leap-interactive") < 0) rightButton.className += " leap-interactive";
             }
 
 
-            if(currentSection === totalSections) {
+            if (currentSection === totalSections) {
                 leftButton.className += " inactive";
                 leftButton.className = leftButton.className.replace(" leap-interactive", "");
-            }else {
+            } else {
                 leftButton.className = leftButton.className.replace(" inactive", "");
                 if(leftButton.className.indexOf("leap-interactive") < 0) leftButton.className += " leap-interactive";
             }
