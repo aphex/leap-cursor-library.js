@@ -1037,6 +1037,7 @@ var LeapManager = (function() {
         root: null,
         gestureCallback: null,
         gestureScope: null,
+        frameCallback: null,
         interactiveSelector: null,
         enableSenchaTouch: false,
         boundary: {
@@ -1079,6 +1080,7 @@ var LeapManager = (function() {
             this.simulateWithMouse = config.simulateWithMouse;
             this.gestureCallback = config.gestureCallback;
             this.gestureScope = config.gestureScope;
+            this.frameCallback = config.frameCallback;
             this.cursorConfig = config.cursorConfig;
             
             this.enableTouchScrolling = config.enableTouchScrolling;
@@ -1133,6 +1135,9 @@ var LeapManager = (function() {
             this.cursorManager.update();
             this.updatePointables(frame);
             this.updateGestures(frame);
+            if (this.frameCallback) {
+                this.frameCallback.call(this, frame);
+            }
         },
         updatePointables: function(frame) {
             var pointable, pointableIndex, cursor, posX, posY, posZ, cursorIndex, currentCursors = [];
