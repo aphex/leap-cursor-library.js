@@ -496,6 +496,7 @@ Cursor.prototype = {
     },
     fireEvent: function(event) {
         if (this.element) {
+            event.cursor = this;
             this.element.fireEvent.apply(this.element, [event]);
         }
     },
@@ -575,7 +576,7 @@ Cursor.prototype = {
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("MouseEvent");
             mouseEvent.initMouseEvent("mouseover", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
-            this.element.fireEvent(mouseEvent);
+            this.fireEvent(mouseEvent);
             this.onElementOver(this.element);
         }
     },
@@ -584,7 +585,7 @@ Cursor.prototype = {
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("MouseEvent");
             mouseEvent.initMouseEvent("mousemove", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
-            this.element.fireEvent(mouseEvent);
+            this.fireEvent(mouseEvent);
             this.onElementMove(this.element);
             if(this.manager.isPressDownEnabled() && this.element.isTappable()) {
                 if(!this.isDown() && this.getZ() < this.manager.getPressThreshold()) {
@@ -600,7 +601,7 @@ Cursor.prototype = {
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("MouseEvent");
             mouseEvent.initMouseEvent("mouseout", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
-            this.element.fireEvent(mouseEvent);
+            this.fireEvent(mouseEvent);
 
             if(this.isDown()) this.dispatchUp(element, false);
             this.onElementOut(this.element);
@@ -612,7 +613,7 @@ Cursor.prototype = {
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("MouseEvent");
             mouseEvent.initMouseEvent("mousedown", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
-            this.element.fireEvent(mouseEvent);
+            this.fireEvent(mouseEvent);
             this.onElementDown(this.element);
         }
     },
@@ -622,7 +623,7 @@ Cursor.prototype = {
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("MouseEvent");
             mouseEvent.initMouseEvent("mouseup", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
-            this.element.fireEvent(mouseEvent);
+            this.fireEvent(mouseEvent);
             this.onElementUp(this.element);
 
             var distance = LeapManagerUtils.distance(this._startPoint, {x:this.icon.getX(), y: this.icon.getY()});
@@ -637,7 +638,7 @@ Cursor.prototype = {
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("MouseEvent");
             mouseEvent.initMouseEvent("click", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
-            this.element.fireEvent(mouseEvent);
+            this.fireEvent(mouseEvent);
         }  
     },
     dispatchTap: function(element) {
@@ -645,7 +646,7 @@ Cursor.prototype = {
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("UIEvent");
             mouseEvent.initUIEvent("tap", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
-            this.element.fireEvent(mouseEvent);
+            this.fireEvent(mouseEvent);
         }  
     }
 };
