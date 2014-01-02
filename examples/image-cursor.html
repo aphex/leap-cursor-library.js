@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leap Cursor Library - Image Cursor</title>
+    <style type="text/css">
+        .leap-cursor {
+            position: absolute;
+            transition-property: background-color; 
+            background-image: url('leap_motion_logo.png');
+            width:200px;
+            height:96px;
+        }
+    </style>
+    <script type="text/javascript" src="../build/js/leap-manager.min.js"></script>
+    <script type="text/javascript" src="../lib/js/leap.min.js"></script>
+</head>
+<body>
+    <h1>Image Cursor</h1>
+    <p>This is a blank page, but your fingertips (pointables) are now custom images.</p>
+    <script type="text/javascript">
+        LeapManager.init({
+            maxCursors:5
+        });
+    </script>
+</body>
+</html>
