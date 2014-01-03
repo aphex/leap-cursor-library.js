@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leap Cursor Library - frameCallback</title>
+    <link rel="stylesheet" type="text/css" href="../build/css/leap-manager.css">
+    <script type="text/javascript" src="../src/js/leap-manager.js"></script>
+    <script type="text/javascript" src="../lib/js/leap.min.js"></script>
+</head>
+<body>
+    <h1>frameCallback</h1>
+    <p>There are Leap states which leap-manager.js does not handle. If you need those, you can define frameCallback.</p>
+    <p>A few examples from <a href="http://js.leapmotion.com/api_guide#Leap_Hand">Leap.Hand</a>:</p>
+
+    <div id="h0_direction">Hand[0] direction 0 0 0</div>
+    <div id="h0_palmNormal">Hand[0] palmNormal 0 0 0</div>
+    <div id="h0_palmPosition">Hand[0] palmPosition 0</div>
+
+    <script type="text/javascript">
+        LeapManager.init({
+            maxCursors:5,
+            frameCallback:function(frame){
+                frame.hands.forEach(function(h,i) {
+                    // only listen to the first hand
+                    if (i > 0) return;
+                    
+                    document.getElementById("h0_direction").innerHTML =    ("Hand[0] direction " +    h.direction.join(" "));
+                    document.getElementById("h0_palmNormal").innerHTML =   ("Hand[0] palmNormal " +   h.palmNormal.join(" "));
+                    document.getElementById("h0_palmPosition").innerHTML = ("Hand[0] palmPosition " + h.palmPosition.join(" "));
+                });
+            }
+
+        });
+    </script>
+</body>
+</html>
