@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leap Cursor Library - Image Cursor with Zoom</title>
+    <style type="text/css">
+        .leap-cursor {
+            position: absolute;
+            transition-property: none; 
+            background-image: url('leap_motion_logo.png');
+            background-size: 100% auto;
+            width:200px;
+            height:96px;
+        }
+    </style>
+    <script type="text/javascript" src="../src/js/leap-manager.js"></script>
+    <script type="text/javascript" src="../lib/js/leap.min.js"></script>
+</head>
+<body>
+    <h1>Image Cursor with Zoom</h1>
+    <p>Your fingertips (pointables) are now custom images. The z position of your each cursor controls the zoom factor of the image(s).</p>
+    <script type="text/javascript">
+
+        // GreedySelector will force all cursor events to be dispatched on the selector passed in.
+        // so in thise case all cursors will dispatch events to the body regardless of what other elements
+        // they maybe over. If you remove this selector you will notice the events only fire when cursors
+        // are over the text in the body.
+        LeapManager.init({
+            maxCursors: 5,
+            enableMetaGestures: false,
+            greedySelector: 'body'
+        });
+
+
+        var base_width = 200;
+        var base_height = 96;                    
+        document.body.addEventListener("mousemove", function(e) {
+            var cursor = e.cursor,
+                dom, new_width, new_height,
+                z;
+
+            // If there is a cursor on this event we know its a leap motion mouse move event
+            if(cursor) {
+                dom = cursor.icon.getElement();
+                z = (cursor.getZ() + 200) / 100;
+                new_width = base_width * z,
+                new_height = base_height * z;
+                dom.style.width =  new_width + "px";
+                dom.style.height = new_height + "px";
+            }
+        });
+    </script>
+</body>
+</html>
