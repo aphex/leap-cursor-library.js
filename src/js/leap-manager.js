@@ -575,7 +575,7 @@ Cursor.prototype = {
         if(element) this.setElement(element);
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("MouseEvent");
-            mouseEvent.initMouseEvent("mouseover", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
+            mouseEvent.initMouseEvent("mouseover", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element.element);
             this.fireEvent(mouseEvent);
             this.onElementOver(this.element);
         }
@@ -584,7 +584,7 @@ Cursor.prototype = {
         if(element) this.setElement(element);
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("MouseEvent");
-            mouseEvent.initMouseEvent("mousemove", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
+            mouseEvent.initMouseEvent("mousemove", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element.element);
             this.fireEvent(mouseEvent);
             this.onElementMove(this.element);
             if(this.manager.isPressDownEnabled() && this.element.isTappable()) {
@@ -600,7 +600,7 @@ Cursor.prototype = {
         if(element) this.setElement(element);
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("MouseEvent");
-            mouseEvent.initMouseEvent("mouseout", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
+            mouseEvent.initMouseEvent("mouseout", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element.element);
             this.fireEvent(mouseEvent);
 
             if(this.isDown()) this.dispatchUp(element, false);
@@ -612,7 +612,7 @@ Cursor.prototype = {
         this._startPoint = {x:this.icon.getX(), y: this.icon.getY()};
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("MouseEvent");
-            mouseEvent.initMouseEvent("mousedown", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
+            mouseEvent.initMouseEvent("mousedown", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element.element);
             this.fireEvent(mouseEvent);
             this.onElementDown(this.element);
         }
@@ -622,7 +622,7 @@ Cursor.prototype = {
         if(element) this.setElement(element);
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("MouseEvent");
-            mouseEvent.initMouseEvent("mouseup", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
+            mouseEvent.initMouseEvent("mouseup", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element.element);
             this.fireEvent(mouseEvent);
             this.onElementUp(this.element);
 
@@ -637,7 +637,7 @@ Cursor.prototype = {
         if(element) this.setElement(element);
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("MouseEvent");
-            mouseEvent.initMouseEvent("click", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
+            mouseEvent.initMouseEvent("click", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element.element);
             this.fireEvent(mouseEvent);
         }  
     },
@@ -645,7 +645,7 @@ Cursor.prototype = {
         if(element) this.setElement(element);
         if(this.hasElement()) {
             var mouseEvent = document.createEvent("UIEvent");
-            mouseEvent.initUIEvent("tap", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element);
+            mouseEvent.initUIEvent("tap", true, false, window, 1, this.icon.getX(), this.icon.getY(), this.icon.getX(), this.icon.getY(), false, false, false, false, 0, this.element.element);
             this.fireEvent(mouseEvent);
         }  
     }
