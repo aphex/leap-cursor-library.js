@@ -35,6 +35,11 @@
 	transition-property: background-color;
 }
 
+.leap-pointable-cursor.leap-cursor-grabbing {
+    -webkit-transform: scale(2);
+    @include leap-cursor(brown, firebrick);
+}
+
 .leap-cursor.leap-timer-cursor {
 
 }

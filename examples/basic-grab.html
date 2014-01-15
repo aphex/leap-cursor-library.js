@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leap Cursor Library - Basic Grab</title>
+    <link rel="stylesheet" type="text/css" href="../build/css/leap-manager.css">
+    <style type="text/css">
+        html, body {
+            height:100%;
+        }
+        .grabbale {
+            display: inline-block;
+            padding:150px;
+            background-color: lightpink;
+            position: absolute;
+            min-width: 100px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .grabbale.hover {
+            background-color: lightblue;
+        }
+
+        .grabbale.grabbed {
+            background-color: orange;
+        }
+    </style>
+    <script type="text/javascript" src="../build/js/leap-manager.min.js"></script>
+    <script type="text/javascript" src="../lib/js/leap.min.js"></script>
+</head>
+<body>
+
+    <div class="grabbale leap-interactive" leap-disable-tap="true">GRAB ME</div>
+
+    <div class="output"></div>
+    <script type="text/javascript">
+        var grabbale = document.querySelector("div.grabbale");
+
+        grabbale.addEventListener("leap-hand-grab", function(e){
+            if(e.state === "grab") {
+                // nothing to do here, but maybe you need to?
+                console.log("grabbed");
+            } else if(e.state === "release") {
+                // nothing to do here, but maybe you need to?
+                console.log("release");
+            } else if(e.state === "move") {
+                grabbale.style.left = e.x - (grabbale.offsetWidth/2)+ "px";
+                grabbale.style.top = e.y - (grabbale.offsetHeight/2)+ "px";
+            }
+        });
+
+        LeapManager.init({
+            maxCursors: 2,
+            useHands: true
+        });
+
+        window.onload = function() {
+            grabbale.style.left = (document.body.offsetWidth/2) - (grabbale.offsetWidth/2)+ "px";
+            grabbale.style.top = (document.body.offsetHeight/2) - (grabbale.offsetHeight/2)+ "px";
+        }
+    </script>
+</body>
+</html>

@@ -573,7 +573,7 @@ Cursor.prototype = {
             this.release();
         }
     },
-    initAndFireEvent: function(evtType, type) {
+    initEvent: function(evtType, type) {
         var evt = document.createEvent(evtType),
             args = [
                 // Type
@@ -612,8 +612,11 @@ Cursor.prototype = {
         }
 
         fn.apply(evt, args);
+        return evt;
+    },
+    initAndFireEvent: function(evtType, type) {
+        var evt = this.initEvent(evtType, type);
         this.fireEvent(evt);
-        return evt;      
     },
     dispatchOver: function(element) {
         if(element) this.setElement(element);
@@ -678,6 +681,98 @@ Cursor.prototype = {
             this.initAndFireEvent("UIEvent", "tap");
         }  
     }
+};
+
+var HandCursor = function(config) {
+    var HAND_OPEN = "open", 
+        HAND_GRAB = "grab",
+        HAND_CLOSED = "closed",
+        EVT_GRAB = "grab",
+        EVT_RELEASE = "release",
+        EVT_MOVE = "move",
+        ACTIVE_CLASS = "grabbed",
+        ACTIVE_CURSOR_CLASS = "leap-cursor-grabbing",
+        cursor = new Cursor(config);
+
+    LeapManagerUtils.extend(cursor, 
+        {
+            isHand: true,
+            lastOpenTime: new Date(),
+            grabDelay: 200,
+            handState: null,
+            isOutside: false,
+            update: function(x,y,z,fingers) {
+                    var timeDiff;
+
+                Cursor.prototype.update.apply(this, arguments);
+
+                if(this.hasElement()) {
+                    if(this.handState === null) {
+                        this.handState = HAND_CLOSED;
+                        return;
+                    }
+
+                    if(this.handState !== HAND_GRAB && fingers > 2) {
+                        this.handState = HAND_OPEN;
+                        this.lastOpenTime = new Date();
+                    } else if(this.handState === HAND_GRAB && fingers  <=2 ) {
+                        this.dispatchGrab(EVT_MOVE);
+                    } else if(this.handState === HAND_GRAB && fingers  > 2 ) {
+                        this.handState = HAND_OPEN;
+                        this.dispatchGrab(EVT_RELEASE);
+                    } else if (this.handState === HAND_OPEN && fingers <= 2) {
+                        timeDiff = new Date() - this.lastOpenTime;
+                        if(timeDiff < this.grabDelay) {
+                            this.handState = HAND_GRAB;
+                            this.dispatchGrab(EVT_GRAB);
+                        } else {
+                            this.handState = HAND_CLOSED;
+                        }
+                    }
+                }
+            },
+            dispatchGrab: function(type) {
+                var evt;
+                if (this.hasElement()) {
+                    evt = this.initEvent("MouseEvent", "leap-hand-grab");
+                    evt.state = type;
+                    evt.gesture = "grab";
+                    this.element.fireEvent(evt);
+                }
+
+                if(this.hasElement()) {
+                    if(type === EVT_GRAB) {
+                        this.element.addClass(ACTIVE_CLASS);
+                        cursor.icon.addClass(ACTIVE_CURSOR_CLASS);
+                    } else if(type === EVT_RELEASE ) {
+                        this.element.removeClass(ACTIVE_CLASS);
+                        cursor.icon.removeClass(ACTIVE_CURSOR_CLASS);
+                        if(this.isOutside) {
+                            this.setElement(null);
+                        }
+                    }
+                }
+            },
+            onElementOver: function(element) { 
+                this.isOutside = false;
+                Cursor.prototype.onElementOver.apply(this, arguments);
+            },
+            onElementOut: function(element) {
+                if(this.handState !== HAND_GRAB) {
+                    Cursor.prototype.onElementOut.apply(this, arguments);
+                } else {
+                    this.isOutside = true;
+                    if (element.isHoverable()) {
+                        element.removeClass("hover");
+                    }
+                    if (this.manager.isHoverTapEnabled() && this.currentClickDelay && element.isTappable()) {
+                        this.stopTimer();
+                    }
+                }
+            }
+        }
+    );
+    return cursor;
 };
 
 var CursorManager = function(config) {
@@ -1052,6 +1147,7 @@ var LeapManager = (function() {
     var LEAP_SOURCE = "leap";
     var defaultConfig = {
         maxCursors: 1,
+        useHands: false,
         enableTouchScrolling: false,
         enableScrollbarScrolling: true,
         enableHoverTap: true,
@@ -1124,6 +1220,8 @@ var LeapManager = (function() {
             this.enableDefaultMetaGestureActions = config.enableDefaultMetaGestureActions;
             this.metaGestureMaxDelay = config.metaGestureMaxDelay || 500;
 
+            this.useHands = config.useHands;
+
             //Sencha Touch Switch
             if (config.enableSenchaTouch) {
                 if (config.interactiveSelector == null) {
@@ -1164,8 +1262,12 @@ var LeapManager = (function() {
         onLoop: function(frame) {
             if (!this.isActiveWindow) return;
             this.cursorManager.update();
-            this.updatePointables(frame);
-            this.updateGestures(frame);
+            if(this.useHands) {
+                this.updateHands(frame);
+            }else {
+                this.updatePointables(frame);
+                this.updateGestures(frame);
+            }
             if (this.frameCallback) {
                 this.frameCallback.call(this, frame);
             }
@@ -1192,7 +1294,33 @@ var LeapManager = (function() {
 
             this.cursorManager.pruneCursors(LEAP_SOURCE, currentCursors);
         },
-        getCursor: function(id, position) {
+        updateHands: function(frame) {
+            var hand, handIndex, cursor, posX, posY, posZ, cursorIndex, currentCursors = [];
+            if (frame && frame.hands) {
+                for (handIndex = 0; handIndex < frame.hands.length && handIndex < this.maxCursors; handIndex++) {
+                    hand = frame.hands[handIndex];
+                    if (hand) {
+                        posX = LeapManagerUtils.map(hand.palmPosition[0], this.boundary.left, this.boundary.right, 0, 1);
+                        posY = LeapManagerUtils.map(hand.palmPosition[1], this.boundary.bottom, this.boundary.top, 1, 0);
+                        posZ = hand.palmPosition[2]; 
+                        cursor = this.getCursor(
+                            hand.id, 
+                            {
+                                x: posX,
+                                y: posY,
+                                z: posZ
+                            }, 
+                            true
+                        );
+                        currentCursors.push(cursor.id);
+                        cursor.update(posX, posY, posZ, hand.fingers.length);
+                    }
+                }
+            }
+
+            this.cursorManager.pruneCursors(LEAP_SOURCE, currentCursors);
+        },
+        getCursor: function(id, position, isHand) {
             var cursor = this.cursorManager.get(LEAP_SOURCE, id);
             if (cursor) return cursor;
 
@@ -1205,7 +1333,11 @@ var LeapManager = (function() {
                 icon: icon
             };
             LeapManagerUtils.extend(cfg, this.cursorConfig);
-            cursor = new Cursor(cfg);
+            if(isHand) {
+                cursor = new HandCursor(cfg);
+            } else {
+                cursor = new Cursor(cfg);
+            }
             this.cursorManager.add(cursor);
             return cursor;
         },
@@ -1383,7 +1515,6 @@ var LeapManager = (function() {
                             previousGesture = me.gestureHistory[gesture.type][0];
                             if(gesture._direction === previousGesture._direction) {
                                 timeDiff = gesture.timestamp - previousGesture.timestamp;
-                                console.log(timeDiff);
                                 if(timeDiff < me.metaGestureMaxDelay) {
                                     var dualSwipe = new DualSwipe(gesture, previousGesture, gesture._direction);
 
