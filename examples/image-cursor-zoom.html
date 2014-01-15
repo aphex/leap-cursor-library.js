@@ -12,7 +12,7 @@
             height:96px;
         }
     </style>
-    <script type="text/javascript" src="../src/js/leap-manager.js"></script>
+    <script type="text/javascript" src="../build/js/leap-manager.min.js"></script>
     <script type="text/javascript" src="../lib/js/leap.min.js"></script>
 </head>
 <body>
@@ -40,7 +40,7 @@
 
             // If there is a cursor on this event we know its a leap motion mouse move event
             if(cursor) {
-                dom = cursor.icon.getElement();
+                dom = cursor.icon.getDom();
                 z = (cursor.getZ() + 200) / 100;
                 new_width = base_width * z,
                 new_height = base_height * z;
